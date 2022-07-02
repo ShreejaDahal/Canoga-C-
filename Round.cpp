@@ -112,13 +112,42 @@ void Round::setDiceRolls(stack<string>diceRolls) {
 	this->diceRolls = diceRolls;
 }
 
+/*
+Function Name: getDiceRolls()
+Purpose: Get dice rolls
+Parameters: 
+Return Value: diceRolls
+Algorithm:
+	1. Return the dice rolls from the file
+*/
+
+
 stack<string>&Round::getdiceRolls() {
 	return diceRolls;
 }
 
+/*
+Function Name: popRolls()
+Purpose: Remove the top roll from the dice rolls
+Parameters: stack of rolls
+Return Value: None
+Algorithm:
+	1. Use .pop() to remove the top roll entry from the stack
+*/
+
 void Round::popRolls(stack<string>&stack) {
 	stack.pop();
 }
+
+/*
+Function Name: getTopRolls()
+Purpose: Return the top roll from the dice rolls
+Parameters: 
+Return Value: roll
+Algorithm:
+	1. Use .top() to return the top roll entry from the stack
+*/
+
 
 string Round::getTopRolls() {
 	stack<string>rolls = getdiceRolls();
@@ -126,12 +155,41 @@ string Round::getTopRolls() {
 	return roll;
 }
 
+/*
+Function Name: getCurrentPlayer()
+Purpose: Return the current player
+Parameters: 
+Return Value: the current player
+Algorithm:
+	1. Return the current player
+*/
+
 string Round::getCurrentPlayer() {
 	return currentPlayer;
 }
+
+/*
+Function Name: getNextPlayer()
+Purpose: Return the next player
+Parameters: 
+Return Value: the next player
+Algorithm:
+	1. Return the next player
+*/
+
 string Round::getNextPlayer() {
 	return nextPlayer;
 }
+
+/*
+Function Name: getWinnerScore()
+Purpose: Return the winner score
+Parameters: 
+Return Value: the winner score
+Algorithm:
+	1. Return the next player
+*/
+
 int Round::getWinnerScore() {
 	return winnerScore;
 }
