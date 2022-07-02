@@ -1,0 +1,9 @@
+Computer: 
+Squares: 1 0 1 0 0 1 0 1 1 
+Scores: 34
+Human: 
+Squares: 0 0 1 0 0 0 1 1 1 
+Scores: 36
+
+First turn: Computer 
+Next Turn: Human
