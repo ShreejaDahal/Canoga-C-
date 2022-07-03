@@ -193,9 +193,33 @@ Algorithm:
 int Round::getWinnerScore() {
 	return winnerScore;
 }
+
+
+/*
+Function Name: getRoundNumber()
+Purpose: Return the round number
+Parameters: 
+Return Value: the round number
+Algorithm:
+	1. Return the round number
+*/
+
 int Round::getRoundNumber() {
 	return roundNumber;
 }
+
+
+
+/*
+Function Name: coverables()
+Purpose: Return the uncovered squares for each player
+Parameters: Board object, player->player name
+Return Value: uncovered_squares_human, uncovered_squares_computer
+Algorithm:
+	1. Return the uncovered squares for human or computer
+*/
+
+
 vector<int> Round::coverables(Board board, string player) {
 	if (player == "Human") {
 		return board.uncovered_squares_human();
@@ -204,6 +228,18 @@ vector<int> Round::coverables(Board board, string player) {
 		return board.uncovered_squares_computer();
 	}
 }
+
+
+/*
+Function Name: uncoverables()
+Purpose: Return the covered squares for each player
+Parameters: Board object, player->player name
+Return Value: covered_squares_human, covered_squares_computer
+Algorithm:
+	1. Return the covered squares for human or computer
+*/
+
+
 vector<int>Round::uncoverables(Board board, string player) {
 	if (player == "Human") {
 		return board.covered_squares_human();
@@ -212,6 +248,19 @@ vector<int>Round::uncoverables(Board board, string player) {
 		return board.covered_squares_computer();
 	}
 }
+
+
+/*
+Function Name: checkIfWon()
+Purpose: Check if either player has won the round
+Parameters: Board object
+Return Value: True if won, false otherwise
+Algorithm:
+	1. For each player, check if all their squares are covered, or all of their opponent's squares are uncovered.
+	2. A player wins by either covering all their squares or by uncovering all their opponent's squares.
+*/
+
+
 bool Round::checkIfWon(Board board) {
 	bool haveWinner = 0;
 		if (getCurrentPlayer() == "Computer") {
@@ -248,13 +297,47 @@ bool Round::checkIfWon(Board board) {
 		}
 }
 
+
+/*
+Function Name: isHandicapped()
+Purpose: Check if handicap is on
+Parameters: 
+Return Value: return handicapped status
+Algorithm:
+	1. Return the handicap status
+*/
+
+
 bool Round::isHandicapped() {
 	return handicapped;
 }
 
+
+/*
+Function Name: setHandicapped()
+Purpose: Initialize handicapped status
+Parameters: handicapped->status
+Return Value: 
+Algorithm:
+	1. Set handicapped status
+*/
+
+
 void Round::setHandicapped(bool handicapped) {
 	this->handicapped = handicapped;
 }
+
+
+/*
+Function Name: roundEndHumanScore()
+Purpose: to get the scores for human at the end of the round
+Parameters: Board object
+Return Value: humanScore
+Algorithm:
+	1. If won by covering all squares, humanScore is the sum total of all uncovered squares of the computer.
+	2. If won by uncovering all squares, compScore is the sum total of all covered squares of the human.
+*/
+
 
 int Round::roundEndHumanScore(Board board) {
 	int humanScore = 0;
@@ -280,8 +363,19 @@ int Round::roundEndHumanScore(Board board) {
 	}
 
 	return humanScore;
-
 }
+
+
+/*
+Function Name: roundEndCompScore()
+Purpose: to get the scores for computer at the end of the round
+Parameters: Board object
+Return Value: compScore
+Algorithm:
+	1. If won by covering all squares, compScore is the sum total of all uncovered squares of the human.
+	2. If won by uncovering all squares, humanScore is the sum total of all covered squares of the computer.
+*/
+
 
 int Round::roundEndCompScore(Board board) {
 	int compScore = 0;
@@ -307,6 +401,20 @@ int Round::roundEndCompScore(Board board) {
 	return compScore;
 }
 
+
+/*
+Function Name: announceWinner()
+Purpose: to announce the winner for the round
+Parameters: Player object
+Return Value: 
+Algorithm:
+	1. If compScore is greater than the humanScore, announce the winner and the score for each player.
+	2. If humanScore is greater than the compScore, announce the winner and the score for each player.
+	3. If both players have equal score, announce it's a tie.
+
+*/
+
+
 void Round::announceWinner(Player player){
 
 	if (player.getCompScore() > player.getHumanScore()) {
@@ -329,28 +437,99 @@ void Round::announceWinner(Player player){
 	}
 }
 
+/*
+Function Name: setWinnerScore()
+Purpose: Set winnerScore
+Parameters: winnerScore -> the score of the winner
+Return Value: None
+Algorithm:
+	1. Initialize the score of the winner
+*/
+
 void Round::setWinnerScore(int winnerScore) {
 	this->winnerScore = winnerScore;
 }
+
+/*
+Function Name: getFirstPlayer()
+Purpose: to get the first player
+Parameters: 
+Return Value: firstPlayer
+Algorithm:
+	1. Return the firstPlayer of the round
+*/
+
 
 string Round::getFirstPlayer() {
 	return firstPlayer;
 }
 
+/*
+Function Name: ishumanFirstTurn()
+Purpose: to check if human is the first player
+Parameters: 
+Return Value: humanFirstTurn status
+Algorithm:
+	1. Return the humanFirstTurn status
+*/
+
 bool Round:: ishumanFirstTurn() {
 	return humanFirstTurn;
 }
+
+
+/*
+Function Name: iscomputerFirstTurn()
+Purpose: to check if computer is the first player
+Parameters: 
+Return Value: compFirstTurn status
+Algorithm:
+	1. Return the compFirstTurn status
+*/
+
+
 bool Round:: iscomputerFirstTurn() {
 	return compFirstTurn;
 
 }
+
+/*
+Function Name: sethumanFirstTurn()
+Purpose: 
+Parameters: humanFirstTurn -> human first turn status
+Return Value: 
+Algorithm:
+	1. Initialize the humanFirstTurn status
+*/
+
+
 void Round:: sethumanFirstTurn(bool humanFirstTurn) {
 	this->humanFirstTurn = humanFirstTurn;
 
 }
+
+/*
+Function Name: setcomputerFirstTurn()
+Purpose: 
+Parameters: compFirstTurn -> computer first turn status
+Return Value: 
+Algorithm:
+	1. Initialize the compFirstTurn status
+*/
+
+
 void Round:: setcomputerFirstTurn(bool compFirstTurn) {
 	this->compFirstTurn = compFirstTurn;
 }
+/*
+Function Name: setFirstPlayer()
+Purpose: 
+Parameters: FirstPlayer -> first player status
+Return Value: 
+Algorithm:
+	1. Initialize the first player 
+*/
+
 
 void Round::setFirstPlayer(string firstPlayer) {
 	this->firstPlayer = firstPlayer;
