@@ -1384,35 +1384,34 @@ void Game::resumeGame() {
 	Player player;
 	string fileName;
 	bool resume = true;
+	bool validFileName = false;
+	vector<string>savedFiles = { "First.txt", "Second.txt", "Third.txt", "Fourth.txt", "Fifth.txt" };
 
-
-	while (fileNum != "1" && fileNum != "2" && fileNum != "3" && fileNum != "4" && fileNum != "5") {
+	while (validFileName == false) {
 		cout << "Choose your option: " << endl;
 		cout << "Type: " << endl;
-		cout << "1 to open First.txt" << endl;
-		cout << "2 to open Second.txt" << endl;
-		cout << "3 to open Third.txt" << endl;
-		cout << "4 to open Fourth.txt" << endl;
-		cout << "5 to open Fifth.txt" << endl;
-		cin >> fileNum;
+		for (int i = 0; i < savedFiles.size(); i++) {
+			cout << i + 1 << " to open " << savedFiles[i] << endl;
+		}
 
-		if (fileNum == "1") {
-			fileName = "First.txt";
+		cin >> fileNum;
+		bool isNum = true;
+
+		for (char const& c : fileNum) {
+			if (isdigit(c) == 0) {
+				isNum = false;
+			}
 		}
-		else if (fileNum == "2") {
-			fileName = "Second.txt";
-		}
-		else if (fileNum == "3") {
-			fileName = "Third.txt";
-		}
-		else if (fileNum == "4") {
-			fileName = "Fourth.txt";
-		}
-		else if (fileNum == "5"){
-			fileName = "Fifth.txt";
-		}
-		else {
-			cout << "That file doesn't exist. Choose again";
+
+		if (isNum) {
+
+			if (stoi(fileNum) < savedFiles.size()) {
+				fileName = savedFiles[stoi(fileNum) - 1];
+				validFileName = true;
+			}
+			else {
+				validFileName = false;
+			}
 		}
 	}
 	vector<int>humanSquares = getSquaresFromFile(fileName, "human");
