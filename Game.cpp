@@ -32,7 +32,7 @@ Algorithm:
 
 Game::Game() {
 	string gameInput;
-	
+
 	do {
 		cout << "----------WELCOME TO THE CANOGA GAME-------------" << endl;
 		cout << "How do you want to play the game? Resume an old game or start a new one? Enter 'r' to resume or 'n' to new." << endl;
@@ -55,7 +55,6 @@ Parameters: None
 Return Value: None
 Algorithm:
 	1. Deconstruct Game Object
-
 */
 
 Game::~Game() {}
@@ -126,6 +125,35 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 			vector<int>rolls;
 			string numOfDie = "";
 			while (roll != "r" || total == 0) {
+				//cout << human.canThrowOneDie(board) << endl;
+				if (human.canThrowOneDie(board) && round.getdiceRolls().size() <= 0) {
+					while (numOfDie != "1" && numOfDie != "2") {
+						cout << "Do you want to throw one die or two dice. Enter 1 for 1 die or 2 for 2 dice, or s to save the game for later " << endl;
+						cin >> numOfDie;
+						if (numOfDie == "1") {
+							die1 = human.roll_dice();
+							total = die1;
+							roll = "r";
+							cout << "Human rolled  " << die1 << ". The total is " << total << endl;
+
+						}
+						else if (numOfDie == "2") {
+							die1 = human.roll_dice();
+							die2 = human.roll_dice();
+							total = die1 + die2;
+							roll = "r";
+							cout << "Human rolled  " << die1 << " and " << die2 << " The total is " << total << endl;
+
+						}
+						else if (roll == "s") {
+							saveGame(board, round, player);
+						}
+						else {
+							cout << "[WARNING] Invalid input" << endl;
+						}
+					}
+				}
+				else {
 					cout << "Enter r to roll or s to save the game for later. " << endl;
 					cin >> roll;
 					if (roll == "r") {
@@ -136,10 +164,9 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 							total = die1 + die2;
 							round.getdiceRolls().pop();
 							total = die1 + die2;
-							cout << " Human rolled  " << die1 << " and " << die2 << " The total is " << total << endl;
+							cout << "Human rolled  " << die1 << " and " << die2 << " The total is " << total << endl;
 						}
 						else {
-							
 							if (human.canThrowOneDie(board)) {
 								while (numOfDie != "1" && numOfDie != "2") {
 									cout << "Do you want to throw one die or two dice. Enter 1 for 1 die or 2 for 2 dice. " << endl;
@@ -147,14 +174,14 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 									if (numOfDie == "1") {
 										die1 = human.roll_dice();
 										total = die1;
-										cout << " Human rolled  " << die1 << ". The total is " << total << endl;
+										cout << "Human rolled  " << die1 << ". The total is " << total << endl;
 
 									}
 									else if (numOfDie == "2") {
 										die1 = human.roll_dice();
 										die2 = human.roll_dice();
 										total = die1 + die2;
-										cout << " Human rolled  " << die1 << " and " << die2 << " The total is " << total << endl;
+										cout << "Human rolled  " << die1 << " and " << die2 << " The total is " << total << endl;
 
 									}
 									else {
@@ -162,14 +189,14 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 									}
 								}
 							}
-								else {
-									die1 = human.roll_dice();
-									die2 = human.roll_dice();
-									total = die1 + die2;
-									cout << " Human rolled  " << die1 << " and " << die2 << " The total is " << total << endl;
+							else {
+								die1 = human.roll_dice();
+								die2 = human.roll_dice();
+								total = die1 + die2;
+								cout << "Human rolled  " << die1 << " and " << die2 << " The total is " << total << endl;
 
-								}
 							}
+						}
 					}
 					else if (roll == "s") {
 						saveGame(board, round, player);
@@ -177,6 +204,7 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 					else {
 						cout << "[WARNING] Invalid input" << endl;
 					}
+				}
 			}
 			bool isCoverable;
 			bool isunCoverable;
@@ -197,20 +225,18 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 					uncoverables.erase(itr);
 				}
 			}
-			
+
 			/*
 			cout << "Human Coverables are: " << endl;
 			for (int i = 0; i < coverables.size(); i++) {
 				cout << coverables[i] << " ";
 			}
 			cout << endl;
-
 			cout << "Human Uncoverables are: " << endl;
 			for (int i = 0; i < uncoverables.size(); i++) {
 				cout << uncoverables[i] << " ";
 			}
 			cout << endl;
-
 			*/
 
 			vector<vector<int>>coverable_options;
@@ -251,7 +277,7 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 					else {
 						isSingleCoverable = true;
 						singleCover.push_back({ total });
-						
+
 					}
 
 					if (board.getCompSquares()[total - 1] == 0) {
@@ -299,7 +325,6 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 
 				/*
 				cout << "Your cover options are: " << endl;
-
 				for (int i = 0; i < coverable_options.size(); i++) {
 					if (coverable_options[i].size() != 0) {
 						cout << "(";
@@ -314,16 +339,13 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 						}
 					}
 				}
-
 				cout << endl;
-
 				cout << "Your uncover options are: " << endl;
 				for (int i = 0; i < uncoverable_options.size(); i++) {
 					if (uncoverable_options[i].size() != 0) {
 						cout << "(";
 						if (uncoverable_options[i].size() == 1) {
 							cout << total << " )";
-
 						}
 						else {
 							for (int j = 0; j < uncoverable_options[i].size(); j++) {
@@ -341,7 +363,7 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 				bool checkIfOptionAvailable = 0;
 
 				while (checkIfOptionAvailable != 1) {
-					cout << " Select cover or uncover.Enter c to cover, u to uncover. Or enter h to get help " << endl;
+					cout << "Select cover or uncover.Enter c to cover, u to uncover. Or enter h to get help " << endl;
 					cin >> coverOrUncover;
 					if (coverOrUncover == "c" || coverOrUncover == "u") {
 						if (coverOrUncover == "c" && coverable_options.size() == 0) {
@@ -367,7 +389,7 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 
 					}
 				}
-				while (sum != total && valid != 1 ) {
+				while (sum != total && valid != 1) {
 					cout << "Choose your square. " << endl;
 					while (!(cin >> choice)) {
 						cin.clear();
@@ -382,9 +404,11 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 						// Validating the user input
 						if (coverOrUncover == "c") {
 							if ((board.getHumanSquares()[choice - 1] == 1)) {
-								cout << " That is an invalid move. You can only cover squares that are not covered. ";
+								cout << " That is an invalid move. You can only cover squares that are not covered.Clearning all squares. ";
 								valid = 0;
 								sum = 0;
+								numOfChoices = 0;
+								choices.clear();
 							}
 							else if (board.getHumanSquares()[choice - 1] == 0) {
 								sum += choice;
@@ -393,9 +417,12 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 						}
 						else if (coverOrUncover == "u") {
 							if ((board.getCompSquares()[choice - 1] == 0)) {
-								cout << " That is an invalid move. You can only uncover squares that are already covered. ";
+								cout << " That is an invalid move. You can only uncover squares that are already covered. Clearning all squares. ";
 								valid = 0;
 								sum = 0;
+								numOfChoices = 0;
+								choices.clear();
+
 							}
 							else {
 								sum += choice;
@@ -403,7 +430,7 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 							}
 						}
 					}
-					if (sum == total && numOfChoices <= 4) {
+					if (sum == total && numOfChoices < 4) {
 						if (coverOrUncover == "c") {
 							cout << "-----Human is covering its choices of squares------" << endl;
 							for (auto& it : choices) {
@@ -415,8 +442,8 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 								cout << "-----Human is uncovering opponent's squares------" << endl;
 								for (auto& it : choices) {
 									board.uncover_comp(it);
+								}
 							}
-						}
 						}
 						boardDisplay.viewHumanBoard(board, player, round);
 						boardDisplay.viewCompBoard(board, player, round);
@@ -425,12 +452,14 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 							if (round.checkIfWon(board)) {
 								round.setWinnerScore(round.roundEndHumanScore(board));
 								player.setHumanScore(round.roundEndHumanScore(board) + player.getHumanScore());
+								boardDisplay.viewHumanBoard(board, player, round);
+								boardDisplay.viewCompBoard(board, player, round);
 								cout << "Current score is : "
 									"Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << endl;
-								cout << " Play again? Hit y for Yes, n for No" << endl;
+								cout << "Play again? Hit y for Yes, n for No" << endl;
 								cin >> play_again;
-								
-								while (play_again != "y" && play_again !="n") {
+
+								while (play_again != "y" && play_again != "n") {
 									cin.clear();
 									cin.ignore();
 									cout << " Play again? Hit y for Yes, n for No" << endl;
@@ -450,7 +479,7 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 								}
 							}
 						}
-						else if(round.isFirstTurn() == true) {
+						else if (round.isFirstTurn() == true) {
 							if (board.isCovered_human()) {
 
 								cout << "Human won by covering all its squares. Current score is: '"
@@ -460,7 +489,7 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 								while (play_again != "y" && play_again != "n") {
 									cin.clear();
 									cin.ignore();
-									cout << " Play again? Hit y for Yes, n for No" << endl;
+									cout << "Play again? Hit y for Yes, n for No" << endl;
 									cin >> play_again;
 
 									if (play_again == "y" || play_again == "n") {
@@ -469,6 +498,8 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 								}
 								round.setWinnerScore(round.roundEndHumanScore(board));
 								player.setHumanScore(round.roundEndHumanScore(board) + player.getHumanScore());
+								boardDisplay.viewHumanBoard(board, player, round);
+								boardDisplay.viewCompBoard(board, player, round);
 								system("pause");
 								if (play_again == "y") {
 									startNewRound(round.getFirstPlayer(), "Human", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
@@ -482,9 +513,18 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 						}
 						numOfChoices = 0;
 					}
-					else if(sum > total) {
+					else if (sum > total) {
 						sum = 0;
-						
+						cout << "[WARNING] The sum total of choices is greater than the total pips. Clearing all chosen squares. " << endl;
+						numOfChoices = 0;
+						choices.clear();
+
+					}
+					else if ( sum < total && numOfChoices > 3) {
+						sum = 0;
+						cout << "[WARNING] You can only choose up to four squares.Clearing all chosen squares. " << endl;
+						numOfChoices = 0;
+						choices.clear();
 					}
 					else {
 						valid = 0;
@@ -498,7 +538,7 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 					if (round.checkIfWon(board)) {
 						cout << "Current score is: '"
 							"Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << endl;
-						cout << "Play again> Hit 1 for Yes, 0 for No " << endl;
+						cout << "Play again? Hit 1 for Yes, 0 for No " << endl;
 						cin >> play_again;
 						while (play_again != "y" && play_again != "n") {
 							cin.clear();
@@ -510,16 +550,18 @@ void Game::startGame(Board board, Round round, Player player, Computer computer,
 								break;
 							}
 						}
-							round.setWinnerScore(round.roundEndHumanScore(board));
-							player.setHumanScore(round.roundEndHumanScore(board) + player.getHumanScore());
-						if(play_again == "y") {
+						round.setWinnerScore(round.roundEndHumanScore(board));
+						player.setHumanScore(round.roundEndHumanScore(board) + player.getHumanScore());
+						boardDisplay.viewHumanBoard(board, player, round);
+						boardDisplay.viewCompBoard(board, player, round);
+						if (play_again == "y") {
 							startNewRound(round.getFirstPlayer(), "Human", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
 						}
 						else {
 							round.announceWinner(player);
 							system("pause");
 							exit(0);
-					}
+						}
 					}
 				}
 				round.sethumanFirstTurn(false);
@@ -546,7 +588,7 @@ Algorithm:
 	7. If not, and if no moves available, human gets the next turn.
 */
 
-void Game::compPlaysNow(Board board, Round round, Player player, Computer computer, Human human, BoardView boardDisplay,  bool resume) {
+void Game::compPlaysNow(Board board, Round round, Player player, Computer computer, Human human, BoardView boardDisplay, bool resume) {
 
 	int die1 = 0;
 	int die2 = 0;
@@ -561,8 +603,8 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 	vector<int>rolls;
 	string continueGame = "";
 
-	boardDisplay.viewHumanBoard(board, player, round);
-	boardDisplay.viewCompBoard(board, player, round);
+	//boardDisplay.viewHumanBoard(board, player, round);
+	//boardDisplay.viewCompBoard(board, player, round);
 
 
 	if (currentPlayer == "Computer") {
@@ -574,7 +616,7 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 				if (continueGame == "n") {
 					saveGame(board, round, player);
 				}
-				else if(continueGame == "y") {
+				else if (continueGame == "y") {
 					if (round.getdiceRolls().size() > 0) {
 						rolls = getRolls(round);
 						die1 = rolls[0];
@@ -587,7 +629,7 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 					else {
 						if (computer.throwOneDie(board)) {
 							die1 = human.roll_dice();
-							cout << " Computer rolled  " << die1  << endl;
+							cout << " Computer rolled  " << die1 << endl;
 							total = die1;
 							cout << " The total is " << total << endl;
 						}
@@ -604,7 +646,7 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 					cout << "[WARNING] Invalid Input. Try again. " << endl;
 				}
 			}
-			
+
 
 			bool isCoverable;
 			bool isunCoverable;
@@ -628,8 +670,8 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 			}
 			vector<vector<int>>coverable_options;
 			vector<vector<int>>uncoverable_options;
-			
-			
+
+			/*
 			cout << "Computer's coverables are : " << endl;
 			for (int i = 0; i < coverables.size(); i++) {
 				cout << coverables[i] << " ";
@@ -641,20 +683,21 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 				cout << uncoverables[i] << " ";
 			}
 			cout << endl;
-			
 
+			*/
 			if (total <= 2) {
 				if (board.getCompSquares()[total - 1] == 1) {
 					isCoverable = false;
 				}
 				else {
-					isCoverable = true;				}
+					isCoverable = true;
+				}
 
 				if (board.getHumanSquares()[total - 1] == 0) {
 					isunCoverable = false;
 				}
 				else {
-					isunCoverable = true;				
+					isunCoverable = true;
 				}
 
 				if (isCoverable && isunCoverable == false) {
@@ -664,10 +707,12 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 
 					if (round.isFirstTurn() == false) {
 						if (round.checkIfWon(board)) {
-							cout << "Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << " Play again? Hit 1 for Yes, 0 for No" << endl;
+							cout << "Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << " Play again? Hit y for Yes, n for No" << endl;
 							cin >> play_again;
 							round.setWinnerScore(round.roundEndCompScore(board));
 							player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
+							boardDisplay.viewHumanBoard(board, player, round);
+							boardDisplay.viewCompBoard(board, player, round);
 							if (play_again == "y") {
 								startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
 							}
@@ -680,8 +725,8 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 					}
 					else if (round.isFirstTurn() == true) {
 						if (board.isCovered_computer()) {
-							cout << "Computer won by covering all its squares. Current score is: '"
-								"Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << " Play again? Hit 1 for Yes, 0 for No" << endl;
+							cout << "Computer won by covering all its squares. Current score is: "
+								"Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << " Play again? Hit y for Yes, n for No" << endl;
 							cin >> play_again;
 							while (play_again != "y" && play_again != "n") {
 								cin.clear();
@@ -696,6 +741,8 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 
 							round.setWinnerScore(round.roundEndCompScore(board));
 							player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
+							boardDisplay.viewHumanBoard(board, player, round);
+							boardDisplay.viewCompBoard(board, player, round);
 							if (play_again == "y") {
 								startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
 							}
@@ -708,12 +755,12 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 					}
 				}
 				else if (isunCoverable && isCoverable == false) {
-						board.uncover_human(total);
-						boardDisplay.viewHumanBoard(board, player, round);
-						boardDisplay.viewCompBoard(board, player, round);
+					board.uncover_human(total);
+					boardDisplay.viewHumanBoard(board, player, round);
+					boardDisplay.viewCompBoard(board, player, round);
 					if (round.isFirstTurn() == false) {
 						if (round.checkIfWon(board)) {
-							cout << "Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << " Play again? Hit 1 for Yes, 0 for No" << endl;
+							cout << "Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << " Play again? Hit y for Yes, n for No" << endl;
 							cin >> play_again;
 							while (play_again != "y" && play_again != "n") {
 								cin.clear();
@@ -727,6 +774,8 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 							}
 							round.setWinnerScore(round.roundEndCompScore(board));
 							player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
+							boardDisplay.viewHumanBoard(board, player, round);
+							boardDisplay.viewCompBoard(board, player, round);
 							if (play_again == "y") {
 								startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
 							}
@@ -740,71 +789,75 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 				}
 				else if (isCoverable || isunCoverable) {
 					bool covOrunCov = computer.toCoverOrUncover(board, round, "no");
-					   if (covOrunCov) {	
-							board.cover_comp(total);
-						}
-					   else {
-						   if (round.isFirstTurn() == false) {
-							   board.uncover_human(total);
-						   }
-					   }
-						boardDisplay.viewHumanBoard(board, player, round);
-						boardDisplay.viewCompBoard(board, player,round);
-
+					if (covOrunCov) {
+						board.cover_comp(total);
+					}
+					else {
 						if (round.isFirstTurn() == false) {
-							if (round.checkIfWon(board)) {
-								cout << "Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << " Play again? Hit 1 for Yes, 0 for No" << endl;
-								cin >> play_again;
-								while (play_again != "y" && play_again != "n") {
-									cin.clear();
-									cin.ignore();
-									cout << " Play again? Hit y for Yes, n for No" << endl;
-									cin >> play_again;
+							board.uncover_human(total);
+						}
+					}
+					boardDisplay.viewHumanBoard(board, player, round);
+					boardDisplay.viewCompBoard(board, player, round);
 
-									if (play_again == "y" || play_again == "n") {
-										break;
-									}
+					if (round.isFirstTurn() == false) {
+						if (round.checkIfWon(board)) {
+							cout << "Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << " Play again? Hit y for Yes, n for No" << endl;
+							cin >> play_again;
+							while (play_again != "y" && play_again != "n") {
+								cin.clear();
+								cin.ignore();
+								cout << "Play again? Hit y for Yes, n for No" << endl;
+								cin >> play_again;
+
+								if (play_again == "y" || play_again == "n") {
+									break;
 								}
-								round.setWinnerScore(round.roundEndCompScore(board));
-								player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
-								if (play_again == "y") {
-									startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
-								}
-								else {
-									round.announceWinner(player);
-									system("pause");
-									exit(0);
-								}
+							}
+							round.setWinnerScore(round.roundEndCompScore(board));
+							player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
+							boardDisplay.viewHumanBoard(board, player, round);
+							boardDisplay.viewCompBoard(board, player, round);
+							if (play_again == "y") {
+								startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
+							}
+							else {
+								round.announceWinner(player);
+								system("pause");
+								exit(0);
 							}
 						}
-						else if(round.isFirstTurn() == true) {
-							if (board.isCovered_computer()) {
-								cout << "Computer won by covering all its squares. Current score is: '"
-									"Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << " Play again? Hit 1 for Yes, 0 for No" << endl;
-	
+					}
+					else if (round.isFirstTurn() == true) {
+						if (board.isCovered_computer()) {
+							cout << "Computer won by covering all its squares. Current score is: "
+								"Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << " Play again? Hit y for Yes, n for No" << endl;
+
+							cin >> play_again;
+							while (play_again != "y" && play_again != "n") {
+								cin.clear();
+								cin.ignore();
+								cout << " Play again? Hit y for Yes, n for No" << endl;
 								cin >> play_again;
-								while (play_again != "y" && play_again != "n") {
-									cin.clear();
-									cin.ignore();
-									cout << " Play again? Hit y for Yes, n for No" << endl;
-									cin >> play_again;
 
-									if (play_again == "y" || play_again == "n") {
-										break;
-									}
-								}
-								round.setWinnerScore(round.roundEndCompScore(board));
-								player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
-								if (play_again == "y") {
-									startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
-
-								}
-								else {
-									round.announceWinner(player);
-									system("pause");
-									exit(0);
+								if (play_again == "y" || play_again == "n") {
+									break;
 								}
 							}
+							round.setWinnerScore(round.roundEndCompScore(board));
+							player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
+							boardDisplay.viewHumanBoard(board, player, round);
+							boardDisplay.viewCompBoard(board, player, round);
+							if (play_again == "y") {
+								startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
+
+							}
+							else {
+								round.announceWinner(player);
+								system("pause");
+								exit(0);
+							}
+						}
 					}
 				}
 				else {
@@ -812,7 +865,7 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 					cout << "No more moves available.Changing the players now. " << endl;
 					if (round.isFirstTurn() == false) {
 						if (round.checkIfWon(board)) {
-							cout << "Computer: " << round.roundEndCompScore(board) << " Human : " << round.roundEndHumanScore(board) << " Play again ? Hit 1 for Yes, 0 for No" << endl;
+							cout << "Computer: " << round.roundEndCompScore(board) << " Human : " << round.roundEndHumanScore(board) << " Play again ? Hit y for Yes, n for No" << endl;
 							cin >> play_again;
 							while (play_again != "y" && play_again != "n") {
 								cin.clear();
@@ -826,6 +879,8 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 							}
 							round.setWinnerScore(round.roundEndCompScore(board));
 							player.setHumanScore(round.roundEndCompScore(board) + player.getCompScore());
+							boardDisplay.viewHumanBoard(board, player, round);
+							boardDisplay.viewCompBoard(board, player, round);
 
 							if (play_again == "y") {
 								startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
@@ -915,7 +970,7 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 						covOrunCov = false;
 					}
 					else {
-						covOrunCov = computer.toCoverOrUncover(board, round, "no");
+						covOrunCov = computer.toCoverOrUncover(board, round, "yes");
 					}
 					move = computer.getBestMove(coverable_options, uncoverable_options, board, round, boardDisplay, "no");
 
@@ -924,72 +979,81 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 							board.cover_comp(move[i]);
 						}
 						else {
-								board.uncover_human(move[i]);
-							
+							board.uncover_human(move[i]);
+
 						}
 					}
-						boardDisplay.viewHumanBoard(board, player, round);
-						boardDisplay.viewCompBoard(board, player, round);
-						if (round.isFirstTurn() == false) {
-							round.checkIfWon(board);
-							if (round.checkIfWon(board)) {
-								round.setWinnerScore(round.roundEndCompScore(board));
-								player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
-								cout << "Computer won!!! Play again? Hit 1 for Yes or 0 for No" << endl;
+					boardDisplay.viewHumanBoard(board, player, round);
+					boardDisplay.viewCompBoard(board, player, round);
+					if (round.isFirstTurn() == false) {
+						if (round.checkIfWon(board)) {
+							cout << "Current score is : "
+								"Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << endl;
+							round.setWinnerScore(round.roundEndCompScore(board));
+							player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
+							boardDisplay.viewHumanBoard(board, player, round);
+							boardDisplay.viewCompBoard(board, player, round);
+							cout << "Play again? Hit y for Yes or n for No" << endl;
+							cin >> play_again;
+							while (play_again != "y" && play_again != "n") {
+								cin.clear();
+								cin.ignore();
+								cout << " Play again? Hit y for Yes, n for No" << endl;
 								cin >> play_again;
-								while (play_again != "y" && play_again != "n") {
-									cin.clear();
-									cin.ignore();
-									cout << " Play again? Hit y for Yes, n for No" << endl;
-									cin >> play_again;
 
-									if (play_again == "y" || play_again == "n") {
-										break;
-									}
-								}
-								if (play_again == "y") {
-									startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
-								}
-								else {
-									round.announceWinner(player);
-									system("pause");
-									exit(0);
+								if (play_again == "y" || play_again == "n") {
+									break;
 								}
 							}
-						}
-						else if(round.isFirstTurn() == true) {
-							if (board.isCovered_computer()) {
-								cout << "Computer won!!! Play again? Hit 1 for Yes or 0 for No" << endl;
-								cin >> play_again;
-								round.setWinnerScore(round.roundEndCompScore(board));
-								player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
-								while (play_again != "y" && play_again != "n") {
-									cin.clear();
-									cin.ignore();
-									cout << " Play again? Hit y for Yes, n for No" << endl;
-									cin >> play_again;
-
-									if (play_again == "y" || play_again == "n") {
-										break;
-									}
-								}
-								if (play_again == "y") {
-									startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
-								}
-								else {
-									round.announceWinner(player);
-									system("pause");
-									exit(0);
-								}
+							if (play_again == "y") {
+								startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
+							}
+							else {
+								round.announceWinner(player);
+								system("pause");
+								exit(0);
 							}
 						}
-						system("pause");
+					}
+					else if (round.isFirstTurn() == true) {
+						if (board.isCovered_computer()) {
+							cout << "Current score is : "
+								"Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << endl;
+							cout << "Play again? Hit y for Yes or n for No" << endl;
+							cin >> play_again;
+							round.setWinnerScore(round.roundEndCompScore(board));
+							player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
+							boardDisplay.viewHumanBoard(board, player, round);
+							boardDisplay.viewCompBoard(board, player, round);
+							while (play_again != "y" && play_again != "n") {
+								cin.clear();
+								cin.ignore();
+								cout << " Play again? Hit y for Yes, n for No" << endl;
+								cin >> play_again;
+
+								if (play_again == "y" || play_again == "n") {
+									break;
+								}
+							}
+							if (play_again == "y") {
+								startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
+							}
+							else {
+								round.announceWinner(player);
+								system("pause");
+								exit(0);
+							}
+						}
+					}
+					system("pause");
 				}
 				else {
 					movesAvailable = 0;
 					if (round.isFirstTurn() == false) {
 						if (round.checkIfWon(board)) {
-							cout << "Computer won!!! Play again? Hit 1 for Yes or 0 for No" << endl;
+							cout << "Current score is : "
+								"Computer: " << round.roundEndCompScore(board) << " Human: " << round.roundEndHumanScore(board) << endl;
+							cout << "Play again? Hit y for Yes or n for No" << endl;
 							cin >> play_again;
 							while (play_again != "y" && play_again != "n") {
 								cin.clear();
@@ -1004,7 +1068,7 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 							round.setWinnerScore(round.roundEndCompScore(board));
 							player.setCompScore(round.roundEndCompScore(board) + player.getCompScore());
 							if (play_again == "y") {
-								startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber()+ 1);
+								startNewRound(round.getFirstPlayer(), "Computer", round.getWinnerScore(), player.getHumanScore(), player.getCompScore(), round.getdiceRolls(), round.getRoundNumber() + 1);
 							}
 							else {
 								round.announceWinner(player);
@@ -1022,7 +1086,7 @@ void Game::compPlaysNow(Board board, Round round, Player player, Computer comput
 			}
 		}
 	}
-	startGame(board, round,player, computer, human, boardDisplay, resume);
+	startGame(board, round, player, computer, human, boardDisplay, resume);
 }
 /*
 Function Name: startNewGame()
@@ -1039,17 +1103,13 @@ Algorithm:
 void Game::startNewGame() {
 	string numOfSquares = "";
 
-	while (numOfSquares != "9" || numOfSquares != "10" || numOfSquares != "11") {
+	while (numOfSquares != "9" && numOfSquares != "10" && numOfSquares != "11") {
 		try {
 			cout << "Type the number of squares between 9 and 11: " << endl;
 			cin >> numOfSquares;
 		}
-		catch(const char* msg){
+		catch (const char* msg) {
 			cout << msg << endl;
-		}
-		if (numOfSquares != "9" || numOfSquares != "10" || numOfSquares != "11") {
-			cout << "The number of squares has to be between 9 and 11." << endl;
-			numOfSquares = 2;
 		}
 	}
 
@@ -1114,7 +1174,7 @@ void Game::startNewGame() {
 
 	round.setFirstTurn(true);
 	if (round.getCurrentPlayer() == "Human") {
-		startGame(board, round,player, computer, human,boardDisplay, resume);
+		startGame(board, round, player, computer, human, boardDisplay, resume);
 	}
 	else if (round.getCurrentPlayer() == "Computer") {
 		compPlaysNow(board, round, player, computer, human, boardDisplay, resume);
@@ -1155,32 +1215,32 @@ vector<int> Game::getSquaresFromFile(string filename, string player) {
 	vector<int>compSquares;
 	vector<int>humanSquares;
 
-	if (pos_comp != std::string::npos){
+	if (pos_comp != std::string::npos) {
 		computerSquares = lines[1].substr(pos_comp + 1);
 	}
-	
+
 	for (int i = 0; i < computerSquares.length(); i++) {
-			if (computerSquares[i] == '*') {
-				compSquares.push_back(1);
-			}
-			else if (isdigit(computerSquares[i]) && computerSquares[i] != '0') {
-				compSquares.push_back(0);
-			}
+		if (computerSquares[i] == '*') {
+			compSquares.push_back(1);
+		}
+		else if (isdigit(computerSquares[i]) && computerSquares[i] != '0') {
+			compSquares.push_back(0);
+		}
 
 	}
 
-	if(pos_hum != std::string::npos){
+	if (pos_hum != std::string::npos) {
 		humSquares = lines[5].substr(pos_hum + 1);
 	}
 
 	for (int i = 0; i < humSquares.length(); i++) {
-			
-			if (humSquares[i] == '*') {
-				humanSquares.push_back(1);
-			}
-			else if (isdigit(humSquares[i]) && humSquares[i] != '0') {
-				humanSquares.push_back(0);
-			}
+
+		if (humSquares[i] == '*') {
+			humanSquares.push_back(1);
+		}
+		else if (isdigit(humSquares[i]) && humSquares[i] != '0') {
+			humanSquares.push_back(0);
+		}
 	}
 	input_file.close();
 	if (player == "computer") {
@@ -1333,7 +1393,7 @@ stack<string> Game::getDiceRolls(string filename) {
 Function Name: getRolls()
 Purpose: Extract the top most roll information from the list of dice rolls
 Parameters: Round object
-Return Value: Return the roll information 
+Return Value: Return the roll information
 Algorithm:
 	1. Set the top most roll information and return it
 */
@@ -1385,7 +1445,20 @@ void Game::resumeGame() {
 	string fileName;
 	bool resume = true;
 	bool validFileName = false;
-	vector<string>savedFiles = { "First.txt", "Second.txt", "Third.txt", "Fourth.txt", "Fifth.txt" };
+	vector<string>savedFiles = {};
+
+
+	/* Getting the filenames*/
+
+	fstream files;
+	files.open("fileNames.txt", ios::in); //open a file to perform read operation using file object
+	if (files.is_open()) {   //checking whether the file is open
+		string file;
+		while (getline(files, file)) { //read data from file object and put it into string.
+			savedFiles.push_back(file); //print the data of the string
+		}
+		files.close(); //close the file object.
+	}
 
 	while (validFileName == false) {
 		cout << "Choose your option: " << endl;
@@ -1405,7 +1478,7 @@ void Game::resumeGame() {
 
 		if (isNum) {
 
-			if (stoi(fileNum) < savedFiles.size()) {
+			if (stoi(fileNum) <= savedFiles.size()) {
 				fileName = savedFiles[stoi(fileNum) - 1];
 				validFileName = true;
 			}
@@ -1435,7 +1508,7 @@ void Game::resumeGame() {
 	cout << "Current Player is: " << round.getCurrentPlayer() << endl;
 
 	if (round.getCurrentPlayer() == "Computer") {
-		compPlaysNow(board, round, player, computer,  human, boardDisplay, resume);
+		compPlaysNow(board, round, player, computer, human, boardDisplay, resume);
 	}
 	else if (round.getCurrentPlayer() == "Human") {
 		startGame(board, round, player, computer, human, boardDisplay, resume);
@@ -1454,16 +1527,12 @@ Algorithm:
 	4. The player that rolls the highest plays the first turn.
 */
 
-void Game::startNewRound(string firstTurn,string winner, int winningScore, int humanScore, int compScore, stack<string>diceRolls, int roundNum) {
+void Game::startNewRound(string firstTurn, string winner, int winningScore, int humanScore, int compScore, stack<string>diceRolls, int roundNum) {
 	string numOfSquares = "";
 
 	while (numOfSquares != "9" && numOfSquares != "10" && numOfSquares != "11") {
 		cout << "Type the number of squares between 9 and 11: " << endl;
 		cin >> numOfSquares;
-
-		if (numOfSquares != "9" || numOfSquares != "10" || numOfSquares != "11") {
-			cout << "The number of squares has to be between 9 and 11." << endl;
-		}
 	}
 
 	Board board(stoi(numOfSquares));
@@ -1474,12 +1543,9 @@ void Game::startNewRound(string firstTurn,string winner, int winningScore, int h
 	Computer computer;
 	Human human;
 	Player player;
-	
+
 	int temp = winningScore;
-
-	//cout << "The winning score is: " << temp << endl;
-
-	int newNum = stoi(numOfSquares)+ 1;
+	int newNum = stoi(numOfSquares) + 1;
 
 	while (newNum > 9) {
 		newNum = 0;
@@ -1492,7 +1558,6 @@ void Game::startNewRound(string firstTurn,string winner, int winningScore, int h
 
 	winningScore = newNum;
 	round.setWinnerScore(winningScore);
-	//cout << "The new winning score is: " << winningScore << endl;
 	cout << "The first turn was taken by: " << firstTurn << endl;
 	cout << "The winner was : " << winner << endl;
 
@@ -1508,7 +1573,7 @@ void Game::startNewRound(string firstTurn,string winner, int winningScore, int h
 		cout << "Human has an advantage. " << endl;
 		board.cover_human(winningScore);
 	}
-	else if (firstTurn == "Computer" && winner == "Human"){
+	else if (firstTurn == "Computer" && winner == "Human") {
 		cout << "Human has an advantage. " << endl;
 		board.cover_human(winningScore);
 	}
@@ -1528,9 +1593,8 @@ void Game::startNewRound(string firstTurn,string winner, int winningScore, int h
 	vector<int>rolls;
 	compScore = 0;
 	humanScore = 0;
-	//stack<string>rollsToPop;
 	cout << "The first turn will be decided by the initial roll. " << endl;
-	
+
 	do {
 		int diceTotals = round.getdiceRolls().size();
 		total = 0;
@@ -1624,6 +1688,13 @@ void Game::saveGame(Board board, Round round, Player player) {
 	cout << "Enter the filename " << endl;
 	cin >> filename;
 
+	fstream newFile;
+	newFile.open("fileNames.txt", ios_base::app | ios_base::in);
+	if (newFile.is_open())
+	{
+		newFile << "\n" << filename << ".txt";
+		newFile.close();
+	}
 
 	ofstream fout(filename + ".txt");
 	if (!fout) {
@@ -1631,27 +1702,39 @@ void Game::saveGame(Board board, Round round, Player player) {
 		exit(0);
 	}
 	fout << "Computer: " << endl;
-	fout << "Squares: ";
+	fout << "   Squares: ";
 	for (int i = 0; i < board.getBoardSize(); i++) {
-		fout << board.getCompSquares()[i] << " ";
+		if (board.getCompSquares()[i] == 0) {
+			fout << "*" << " ";
+		}
+		else {
+			fout << i + 1 << " ";
+
+		}
 	}
 	fout << endl;
 
-	fout << "Scores: " << player.getCompScore() << endl;
+	fout << "   Score: " << player.getCompScore() << endl << endl;
 
 	fout << "Human: " << endl;
-	fout << "Squares: ";
+	fout << "   Squares: ";
 	for (int i = 0; i < board.getBoardSize(); i++) {
-		fout << board.getHumanSquares()[i] << " ";
+		if (board.getHumanSquares()[i] == 0) {
+			fout << "*" << " ";
+		}
+		else {
+			fout << i + 1 << " ";
+
+		}
 	}
 	fout << endl;
 
-	fout << "Scores: " << player.getHumanScore() << endl;
+	fout << "   Score: " << player.getHumanScore() << endl;
 
 	fout << endl;
 
 
-	fout << "First turn: " << round.getFirstPlayer() << " " << endl;
+	fout << "First Turn: " << round.getFirstPlayer() << " " << endl;
 	fout << "Next Turn: " << round.getCurrentPlayer() << endl;
 	system("pause");
 	exit(0);
